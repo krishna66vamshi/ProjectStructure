@@ -11,18 +11,19 @@ import ObjectMapper
 import Alamofire
 
 //Declare it in constants file
-let urlString = "https://rss.itunes.apple.com/api/v1/us/apple-music/coming-soon/all/100/explicit.json"
+let urlString = "https://rss.itunes.apple.com/api/v1/us/apple-music/coming-soon/all/200/explicit.json"
 
 
 struct APIManager{
     //If resuired
     //FIXME: -Pass Params, Pass Headers,Pass Urls-
-    static func fetchData(_success:@escaping(FeedData) -> Void,_failure:@escaping(Any) -> Void){
+    static func fetchData(_success:@escaping([Result]) -> Void,_failure:@escaping(Any) -> Void){
     Alamofire.request(URL(string: urlString)!).responseJSON { (response) in
             if response.result.isSuccess{
                 guard let data = response.result.value else{return}
                 guard let finalResponse = Mapper<FeedData>().map(JSONObject: data) else{return}
-                _success(finalResponse) 
+                guard let result = finalResponse.feed?.results else{fatalError()}
+                _success(result)
             }
             else{
                 _failure("Error")

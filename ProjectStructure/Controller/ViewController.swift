@@ -24,9 +24,12 @@ class ViewController: UIViewController {
         
         self.spinner.startAnimating()
         APIManager.fetchData(_success: { (response) in
-            for item in (response.feed?.results)!{
-                self.myModelArray.append(item)
-            }
+            
+            self.myModelArray = response
+            
+//            for item in (response.feed?.results)!{
+//                self.myModelArray.append(item)
+//            }
             DispatchQueue.main.async {
                 self.spinner.stopAnimating()
                 self.spinner.hidesWhenStopped = true
@@ -40,7 +43,6 @@ class ViewController: UIViewController {
     }
 }
 extension ViewController:UITableViewDelegate,UITableViewDataSource{
-    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 150
     }
